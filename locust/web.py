@@ -152,6 +152,9 @@ def request_stats():
         })
     
     report = {"stats":stats, "errors":[e.to_dict() for e in six.itervalues(runners.locust_runner.errors)]}
+    for error in report['errors']:
+        if error['error'].__class__.__module__ != '__builtin__':
+            error['error'] = str(error['error'])
     if stats:
         report["total_rps"] = stats[len(stats)-1]["current_rps"]
         report["fail_ratio"] = runners.locust_runner.stats.aggregated_stats("Total").fail_ratio
